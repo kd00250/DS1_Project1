@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="646.0" prefWidth="528.0" xmlns:fx="http://javafx.com/fxml"
+            fx:controller="edu.westga.dsdm.knightstravails.view.KnightsTravailsCodeBehind">
+    <children>
+        <Label fx:id="headerLabel" layoutX="20.0" layoutY="15.0" prefHeight="35.0" prefWidth="191.0" text="Knight's Travails">
+            <font>
+                <Font size="24.0" />
+            </font>
+        </Label>
+        <Label fx:id="youWonLabel" layoutX="20.0" layoutY="15.0" prefHeight="31.0" prefWidth="234.0" text="Congratulation, you won!" textFill="#0c9605" visible="false">
+            <font>
+                <Font size="20.0" />
+            </font>
+        </Label>
+        <Label fx:id="youLostLabel" layoutX="20.0" layoutY="15.0" prefHeight="31.0" prefWidth="234.0" text="Sorry, you lost!" textFill="#940f06" visible="false">
+            <font>
+                <Font size="20.0" />
+            </font>
+        </Label>
+        <AnchorPane fx:id="chessBoardPane" layoutX="20.0" layoutY="61.0" prefHeight="485.0" prefWidth="484.0" style="-fx-background-color: grey;" />
+        <Button fx:id="undoButton" layoutX="20.0" layoutY="565.0" mnemonicParsing="false" onAction="#handleUndo" prefHeight="60.0" prefWidth="100.0" text="undo move" textAlignment="CENTER" wrapText="true">
+            <font>
+                <Font size="14.0" />
+            </font></Button>
+        <Button fx:id="showSolutionButton" layoutX="148.0" layoutY="565.0" mnemonicParsing="false" onAction="#handleShowSolution" prefHeight="60.0" prefWidth="100.0" text="show solution" textAlignment="CENTER" wrapText="true">
+            <font>
+                <Font size="14.0" />
+            </font></Button>
+        <Button fx:id="newPuzzleButton" layoutX="276.0" layoutY="565.0" mnemonicParsing="false" onAction="#handleNewPuzzle" prefHeight="60.0" prefWidth="100.0" text="start new puzzle" textAlignment="CENTER" wrapText="true">
+            <font>
+                <Font size="14.0" />
+            </font></Button>
+        <Button fx:id="exitButton" layoutX="405.0" layoutY="565.0" mnemonicParsing="false" onAction="#handleExit" prefHeight="60.0" prefWidth="100.0" text="Exit">
+            <font>
+                <Font size="14.0" />
+            </font></Button>
+        <Pane fx:id="numberMovesPane" layoutX="303.0" layoutY="16.0" prefHeight="35.0" prefWidth="202.0">
+            <children>
+                <Label layoutX="14.0" layoutY="5.0" prefHeight="27.0" prefWidth="142.0" text="Number Moves:">
+                    <font>
+                        <Font size="18.0" />
+                    </font>
+                </Label>
+                <Label fx:id="numberMovesLabel" alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="146.0" layoutY="6.0" prefHeight="27.0" prefWidth="46.0" text="0">
+                    <font>
+                        <Font size="18.0" />
+                    </font>
+                </Label>
+            </children>
+        </Pane>
+    </children>
+</AnchorPane>
