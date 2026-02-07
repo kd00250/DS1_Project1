@@ -115,14 +115,31 @@ public class KnightsTravailsViewModel {
      * moves -> this.lostProperty.getValue() == true)
      */
     public void moveKnight(Position position) {
-        //this.knightPositionProperty.setValue(position);
-        int newCol = position.col();
-        int newRow = position.row();
-        if (newRow == this.startPosition.row() + 3 && newCol == this.startPosition.col() - 1) {
-            this.knightPositionProperty.setValue(position);
+        if (position == null) {
+            throw new IllegalArgumentException("Move cannot be null.");
         }
-        this.numberMovesProperty.setValue(this.numberMovesProperty.getValue() + 1);
-        this.proirMoves.push(position);
+        //this.knightPositionProperty.setValue(position);
+        Position currentPosition = this.knightPositionProperty.getValue();
+        if (this.isValidMove(currentPosition, position)) {
+            this.proirMoves.push(currentPosition);
+            this.knightPositionProperty.setValue(position);
+            this.numberMovesProperty.setValue(this.numberMovesProperty.getValue() + 1);
+        }
+    }
+
+    /**
+     * Checks if a move is valid.
+     *
+     * @param currentPosition the position that the knight is currently in
+     * @param newPosition the position that the user wants to move the knight
+     * @pre none
+     * @post returns true or false
+     * @return true or false based on if the move is valid
+     */
+    private boolean isValidMove(Position currentPosition, Position newPosition) {
+        int rowDifference = Math.abs(newPosition.row() - currentPosition.row());
+        int colDifference = Math.abs(newPosition.col() - currentPosition.col());
+        return ((rowDifference == 2 && colDifference == 1) || (rowDifference == 1 && colDifference == 2));
     }
 
     /**
@@ -132,9 +149,10 @@ public class KnightsTravailsViewModel {
      * @post the most recent move is undone
      */
     public void undo() {
-        this.knightPositionProperty.setValue(this.proirMoves.pop());
-        this.numberMovesProperty.setValue(this.numberMovesProperty.getValue() - 1);
-        System.out.println("Replace me with instructions to undo the most recent move");
+        if (this.numberMovesProperty().getValue() != 0) {
+            this.knightPositionProperty.setValue(this.proirMoves.pop());
+            this.numberMovesProperty.setValue(this.numberMovesProperty.getValue() - 1);
+        }
     }
 
     /**
