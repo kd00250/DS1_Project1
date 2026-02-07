@@ -115,7 +115,12 @@ public class KnightsTravailsViewModel {
      * moves -> this.lostProperty.getValue() == true)
      */
     public void moveKnight(Position position) {
-        this.knightPositionProperty.setValue(position);
+        //this.knightPositionProperty.setValue(position);
+        int newCol = position.col();
+        int newRow = position.row();
+        if (newRow == this.startPosition.row() + 3 && newCol == this.startPosition.col() - 1) {
+            this.knightPositionProperty.setValue(position);
+        }
         this.numberMovesProperty.setValue(this.numberMovesProperty.getValue() + 1);
         this.proirMoves.push(position);
     }
