@@ -25,32 +25,46 @@ public class SolvePuzzle {
         this.solutionPath = new LinkedList<>();
     }
 
-    public LinkedList<Position> getSolution(Position currentPos, Position endPosition) {
-        if (currentPos == null || endPosition == null) {
+    /**
+     * Solves the Knight transversal puzzle.
+     * @param startPos the current/starting position
+     * @param endPos the end/target position
+     * @pre currentPos != null && endPos != null
+     * @post none
+     * @return the linked list of the solution path from the start to the target position
+     */
+    public LinkedList<Position> getSolution(Position startPos, Position endPos) {
+        if (startPos == null || endPos == null) {
             throw new IllegalArgumentException("Either start or end position cannot be null.");
         }
         Queue<Position> nextNodes = new LinkedList<>();
         HashMap<Position, Position> predecesor = new HashMap<>();
         HashSet<Position> selected = new HashSet<>();
 
-        nextNodes.offer(currentPos);
-        selected.add(currentPos);
-        predecesor.put(currentPos, null);
+        nextNodes.offer(startPos);
+        selected.add(startPos);
+        predecesor.put(startPos, null);
 
         while (!nextNodes.isEmpty()) {
-            Position spaceOnBoard = nextNodes.poll();
+            Position original = nextNodes.poll();
 
-            if (spaceOnBoard.equals(endPosition)) {
-                this.solutionPath = reconstructPath(predecesor, endPosition);
+            if (original.equals(endPos)) {
+                this.solutionPath = this.reconstructPath(predecesor, endPos);
                 return this.solutionPath;
             }
 
-            for (int[] move : KNIGHT_MOVES) {
-                int newRow = spaceOnBoard.row() + move[0];
-                int newCol = spaceOnBoard.col() + move[1];
+            for (int[] move : POSIBLE_MOVES) {
+                int newRow = original.row() + move[0];
+                int newCol = original.col() + move[1];
 
-                if (this.isValid(newRow, newCol) {
+                if (this.isValid(newRow, newCol)) {
+                    Position neighbor = new Position(newRow, newCol);
 
+                    if (!selected.contains(neighbor)) {
+                        nextNodes.offer(neighbor);
+                        predecesor.put(neighbor, original);
+                        selected.add(neighbor);
+                    }
                 }
             }
         }
@@ -58,9 +72,28 @@ public class SolvePuzzle {
     }
 
     /**
-     * Checks if the neighbor move is valid or not
+     * Gets the solution path from the passed in predecessor hashmap.
+     * @param predecessor the hashmap of previous nodes
+     * @param endPosition the target node to reach
+     * @return a linked list that is the solution path from start to finish
+     */
+    private LinkedList<Position> reconstructPath(HashMap<Position, Position> predecessor, Position endPosition) {
+        LinkedList<Position> path = new LinkedList<>();
+        Position current = endPosition;
+
+        while (current != null) {
+            path.addFirst(current);
+            current = predecessor.get(current);
+        }
+        return path;
+    }
+
+    /**
+     * Checks if the neighbor move is valid or not.
      * @param row the row of the neighbor
      * @param col the col of the neighbor
+     * @pre none
+     * @post none
      * @return true or false if the move is valid
      */
     private boolean isValid(int row, int col) {

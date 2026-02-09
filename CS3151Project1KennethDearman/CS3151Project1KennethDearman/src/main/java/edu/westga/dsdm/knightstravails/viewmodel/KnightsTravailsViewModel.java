@@ -6,6 +6,7 @@ import java.util.Random;
 import java.util.Stack;
 
 import edu.westga.dsdm.knightstravails.model.Position;
+import edu.westga.dsdm.knightstravails.solver.SolvePuzzle;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.beans.property.BooleanProperty;
@@ -118,7 +119,6 @@ public class KnightsTravailsViewModel {
         if (position == null) {
             throw new IllegalArgumentException("Move cannot be null.");
         }
-        //this.knightPositionProperty.setValue(position);
         Position currentPosition = this.knightPositionProperty.getValue();
         if (this.isValidMove(currentPosition, position)) {
             this.proirMoves.push(currentPosition);
@@ -162,7 +162,9 @@ public class KnightsTravailsViewModel {
      * @post wonProperty.getValue == true && lostProperty.getValue() == true
      */
     public void showSolution() {
-        LinkedList<Position> solutionPath = new LinkedList<Position>();
+        SolvePuzzle solver = new SolvePuzzle();
+        LinkedList<Position> solutionPath = solver.getSolution(this.startPosition, this.targetPositionProperty.getValue());
+        //LinkedList<Position> solutionPath = new LinkedList<Position>();
         this.wonProperty.setValue(true);
         this.lostProperty.setValue(true);
         this.tracePath(solutionPath.iterator(), solutionPath.size() - 1);
