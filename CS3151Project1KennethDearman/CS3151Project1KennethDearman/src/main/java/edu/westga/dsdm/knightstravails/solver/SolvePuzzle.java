@@ -8,7 +8,7 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 /**
- * The Solve Puzzle Class
+ * The Solve Puzzle Class.
  *
  * @author Kenneth Dearman
  */
@@ -38,18 +38,18 @@ public class SolvePuzzle {
             throw new IllegalArgumentException("Either start or end position cannot be null.");
         }
         Queue<Position> nextNodes = new LinkedList<>();
-        HashMap<Position, Position> predecesor = new HashMap<>();
+        HashMap<Position, Position> previous = new HashMap<>();
         HashSet<Position> selected = new HashSet<>();
 
-        nextNodes.offer(startPos);
+        nextNodes.add(startPos);
         selected.add(startPos);
-        predecesor.put(startPos, null);
+        previous.put(startPos, null);
 
         while (!nextNodes.isEmpty()) {
             Position original = nextNodes.poll();
 
             if (original.equals(endPos)) {
-                this.solutionPath = this.reconstructPath(predecesor, endPos);
+                this.solutionPath = this.getPath(previous, endPos);
                 return this.solutionPath;
             }
 
@@ -57,12 +57,12 @@ public class SolvePuzzle {
                 int newRow = original.row() + move[0];
                 int newCol = original.col() + move[1];
 
-                if (this.isValid(newRow, newCol)) {
+                if (this.isValidMove(newRow, newCol)) {
                     Position neighbor = new Position(newRow, newCol);
 
                     if (!selected.contains(neighbor)) {
-                        nextNodes.offer(neighbor);
-                        predecesor.put(neighbor, original);
+                        nextNodes.add(neighbor);
+                        previous.put(neighbor, original);
                         selected.add(neighbor);
                     }
                 }
@@ -77,7 +77,7 @@ public class SolvePuzzle {
      * @param endPosition the target node to reach
      * @return a linked list that is the solution path from start to finish
      */
-    private LinkedList<Position> reconstructPath(HashMap<Position, Position> predecessor, Position endPosition) {
+    private LinkedList<Position> getPath(HashMap<Position, Position> predecessor, Position endPosition) {
         LinkedList<Position> path = new LinkedList<>();
         Position current = endPosition;
 
@@ -96,7 +96,7 @@ public class SolvePuzzle {
      * @post none
      * @return true or false if the move is valid
      */
-    private boolean isValid(int row, int col) {
+    private boolean isValidMove(int row, int col) {
         return row >= 0 && row < Position.MAX_ROWS && col >= 0 && col < Position.MAX_COLS;
     }
 }
