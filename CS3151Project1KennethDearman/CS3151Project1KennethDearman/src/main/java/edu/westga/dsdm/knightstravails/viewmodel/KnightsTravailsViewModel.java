@@ -30,7 +30,8 @@ public class KnightsTravailsViewModel {
     private final BooleanProperty wonProperty;
     private final BooleanProperty lostProperty;
     private final SimpleIntegerProperty numberMovesProperty;
-    private Stack<Position> proirMoves;
+    private Stack<Position> priorMoves;
+    private SolvePuzzle solver;
 
     /**
      * Instantiates a new puzzle viewmodel for the logic of the knight's travails
@@ -46,7 +47,8 @@ public class KnightsTravailsViewModel {
         this.lostProperty = new SimpleBooleanProperty(false);
         this.startPosition = null;
         this.numberMovesProperty = new SimpleIntegerProperty();
-        this.proirMoves = new Stack<Position>();
+        this.priorMoves = new Stack<Position>();
+        this.solver = new SolvePuzzle();
     }
 
     /**
@@ -121,10 +123,25 @@ public class KnightsTravailsViewModel {
         }
         Position currentPosition = this.knightPositionProperty.getValue();
         if (this.isValidMove(currentPosition, position)) {
-            this.proirMoves.push(currentPosition);
+            this.priorMoves.push(currentPosition);
             this.knightPositionProperty.setValue(position);
             this.numberMovesProperty.setValue(this.numberMovesProperty.getValue() + 1);
         }
+        if (this.didUserWin()) {
+            this.wonProperty.setValue(true);
+        }
+    }
+
+    /**
+     * Checks if the user has completed the puzzle in the correct amount of moves.
+     * @pre none
+     * @post return true or false
+     * @return true or false if the user has won or not
+     */
+    private boolean didUserWin() {
+        int winningMoves = this.solver.getSolution(this.startPosition, this.targetPositionProperty.getValue()).size();
+        boolean knightAtTarget = this.knightPositionProperty.getValue().equals(this.targetPositionProperty.getValue());
+        return winningMoves < this.numberMovesProperty.getValue() && knightAtTarget;
     }
 
     /**
@@ -150,7 +167,7 @@ public class KnightsTravailsViewModel {
      */
     public void undo() {
         if (this.numberMovesProperty().getValue() != 0) {
-            this.knightPositionProperty.setValue(this.proirMoves.pop());
+            this.knightPositionProperty.setValue(this.priorMoves.pop());
             this.numberMovesProperty.setValue(this.numberMovesProperty.getValue() - 1);
         }
     }
@@ -162,9 +179,7 @@ public class KnightsTravailsViewModel {
      * @post wonProperty.getValue == true && lostProperty.getValue() == true
      */
     public void showSolution() {
-        SolvePuzzle solver = new SolvePuzzle();
-        LinkedList<Position> solutionPath = solver.getSolution(this.startPosition, this.targetPositionProperty.getValue());
-        //LinkedList<Position> solutionPath = new LinkedList<Position>();
+        LinkedList<Position> solutionPath = this.solver.getSolution(this.startPosition, this.targetPositionProperty.getValue());
         this.wonProperty.setValue(true);
         this.lostProperty.setValue(true);
         this.tracePath(solutionPath.iterator(), solutionPath.size() - 1);
