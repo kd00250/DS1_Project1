@@ -14,10 +14,10 @@ import java.util.Queue;
  */
 public class SolvePuzzle {
     private LinkedList<Position> solutionPath;
-    private static final int[][] POSIBLE_MOVES = {{2, 1}, {2, -1}, {-2, 1}, {-2, -1}, {1, 2}, {1, -2}, {-1, 2}, {-1, -2}};
+    private static final int[][] POSSIBLE_MOVES = {{2, 1}, {2, -1}, {-2, 1}, {-2, -1}, {1, 2}, {1, -2}, {-1, 2}, {-1, -2}};
 
     /**
-     * instatiates a new instance of SolvePuzzle.
+     * instantiates a new instance of SolvePuzzle.
      * @pre none
      * @post none
      */
@@ -29,7 +29,7 @@ public class SolvePuzzle {
      * Solves the Knight transversal puzzle.
      * @param startPos the current/starting position
      * @param endPos the end/target position
-     * @pre currentPos != null && endPos != null
+     * @pre start != null && end != null
      * @post none
      * @return the linked list of the solution path from the start to the target position
      */
@@ -53,7 +53,7 @@ public class SolvePuzzle {
                 return this.solutionPath;
             }
 
-            for (int[] move : POSIBLE_MOVES) {
+            for (int[] move : POSSIBLE_MOVES) {
                 int newRow = original.row() + move[0];
                 int newCol = original.col() + move[1];
 

@@ -111,6 +111,47 @@ public class KnightsTravailsCodeBehind {
                 new NumberStringConverter());
     }
 
+    private void gameState2() {
+        this.undoButton.setDisable(true);
+        this.chessBoardPane.setDisable(true);
+    }
+
+    private void gameState3() {
+        this.headerLabel.setVisible(false);
+        this.youWonLabel.setVisible(true);
+        this.undoButton.setDisable(true);
+        this.showSolutionButton.setDisable(true);
+        this.chessBoardPane.setDisable(true);
+    }
+
+    private void gameState4() {
+        this.headerLabel.setVisible(false);
+        this.youLostLabel.setVisible(true);
+        this.undoButton.setDisable(true);
+        this.chessBoardPane.setDisable(true);
+    }
+
+    private void gameState1() {
+        this.headerLabel.setVisible(true);
+        this.youWonLabel.setVisible(false);
+        this.youLostLabel.setVisible(false);
+        this.undoButton.setDisable(false);
+        this.showSolutionButton.setDisable(false);
+        this.chessBoardPane.setDisable(false);
+    }
+
+    private void determineGameState() {
+        if (this.viewModel.wonProperty().getValue() == true && this.viewModel.lostProperty().getValue() == true) {
+            this.gameState2();
+        } else if (this.viewModel.wonProperty().getValue() == true && this.viewModel.lostProperty().getValue() == false) {
+            this.gameState3();
+        } else if (this.viewModel.wonProperty().getValue() == false && this.viewModel.lostProperty().getValue() == true) {
+            this.gameState4();
+        } else {
+            this.gameState1();
+        }
+    }
+
     private void setupChessBoard() {
         this.squareButtons = new Button[8][8];
         for (int row = 0; row < Position.MAX_ROWS; row++) {
@@ -158,6 +199,8 @@ public class KnightsTravailsCodeBehind {
                 this.squareButtons[newValue.row()][newValue.col()].setGraphic(this.targetIcon);
             }
         });
+        this.viewModel.wonProperty().addListener(_ -> this.determineGameState());
+        this.viewModel.lostProperty().addListener(_ -> this.determineGameState());
     }
 
     @FXML

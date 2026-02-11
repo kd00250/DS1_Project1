@@ -127,8 +127,12 @@ public class KnightsTravailsViewModel {
             this.knightPositionProperty.setValue(position);
             this.numberMovesProperty.setValue(this.numberMovesProperty.getValue() + 1);
         }
-        if (this.didUserWin()) {
-            this.wonProperty.setValue(true);
+        if (this.knightPositionProperty.getValue().equals(this.targetPositionProperty.getValue())) {
+            if (this.didUserWin()) {
+                this.wonProperty.setValue(true);
+            } else {
+                this.lostProperty.setValue(true);
+            }
         }
     }
 
@@ -140,8 +144,7 @@ public class KnightsTravailsViewModel {
      */
     private boolean didUserWin() {
         int winningMoves = this.solver.getSolution(this.startPosition, this.targetPositionProperty.getValue()).size();
-        boolean knightAtTarget = this.knightPositionProperty.getValue().equals(this.targetPositionProperty.getValue());
-        return winningMoves < this.numberMovesProperty.getValue() && knightAtTarget;
+        return winningMoves > this.numberMovesProperty.getValue();
     }
 
     /**
@@ -179,9 +182,9 @@ public class KnightsTravailsViewModel {
      * @post wonProperty.getValue == true && lostProperty.getValue() == true
      */
     public void showSolution() {
-        LinkedList<Position> solutionPath = this.solver.getSolution(this.startPosition, this.targetPositionProperty.getValue());
         this.wonProperty.setValue(true);
         this.lostProperty.setValue(true);
+        LinkedList<Position> solutionPath = this.solver.getSolution(this.startPosition, this.targetPositionProperty.getValue());
         this.tracePath(solutionPath.iterator(), solutionPath.size() - 1);
     }
 
