@@ -114,6 +114,10 @@ public class KnightsTravailsCodeBehind {
     private void gameState2() {
         this.undoButton.setDisable(true);
         this.chessBoardPane.setDisable(true);
+        this.showSolutionButton.setDisable(false);
+        this.headerLabel.setVisible(true);
+        this.youWonLabel.setVisible(false);
+        this.youLostLabel.setVisible(false);
     }
 
     private void gameState3() {
