@@ -3,6 +3,7 @@ package edu.westga.dsdm.knightstravails.view;
 import edu.westga.dsdm.knightstravails.model.Position;
 import edu.westga.dsdm.knightstravails.viewmodel.KnightsTravailsViewModel;
 import javafx.application.Platform;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
@@ -109,51 +110,19 @@ public class KnightsTravailsCodeBehind {
         this.targetPositionProperty.bind(this.viewModel.getTargetPositionProperty());
         this.numberMovesLabel.textProperty().bindBidirectional(this.viewModel.numberMovesProperty(),
                 new NumberStringConverter());
-    }
-
-    private void gameState2() {
-        this.undoButton.setDisable(true);
-        this.chessBoardPane.setDisable(true);
-        this.showSolutionButton.setDisable(false);
-        this.headerLabel.setVisible(true);
-        this.youWonLabel.setVisible(false);
-        this.youLostLabel.setVisible(false);
-    }
-
-    private void gameState3() {
-        this.headerLabel.setVisible(false);
-        this.youWonLabel.setVisible(true);
-        this.undoButton.setDisable(true);
-        this.showSolutionButton.setDisable(true);
-        this.chessBoardPane.setDisable(true);
-    }
-
-    private void gameState4() {
-        this.headerLabel.setVisible(false);
-        this.youLostLabel.setVisible(true);
-        this.undoButton.setDisable(true);
-        this.chessBoardPane.setDisable(true);
-    }
-
-    private void gameState1() {
-        this.headerLabel.setVisible(true);
-        this.youWonLabel.setVisible(false);
-        this.youLostLabel.setVisible(false);
-        this.undoButton.setDisable(false);
-        this.showSolutionButton.setDisable(false);
-        this.chessBoardPane.setDisable(false);
+        this.determineGameState();
     }
 
     private void determineGameState() {
-        if (this.viewModel.wonProperty().getValue() == true && this.viewModel.lostProperty().getValue() == true) {
-            this.gameState2();
-        } else if (this.viewModel.wonProperty().getValue() == true && this.viewModel.lostProperty().getValue() == false) {
-            this.gameState3();
-        } else if (this.viewModel.wonProperty().getValue() == false && this.viewModel.lostProperty().getValue() == true) {
-            this.gameState4();
-        } else {
-            this.gameState1();
-        }
+        BooleanProperty wonProperty = this.viewModel.wonProperty();
+        BooleanProperty lostProperty = this.viewModel.lostProperty();
+
+        this.headerLabel.visibleProperty().bind(wonProperty.isEqualTo(lostProperty));
+        this.youWonLabel.visibleProperty().bind(wonProperty.and(lostProperty.not()));
+        this.youLostLabel.visibleProperty().bind(lostProperty.and(wonProperty.not()));
+        this.undoButton.disableProperty().bind(wonProperty.or(lostProperty));
+        this.showSolutionButton.disableProperty().bind(wonProperty.and(lostProperty.not()));
+        this.chessBoardPane.disableProperty().bind(wonProperty.or(lostProperty));
     }
 
     private void setupChessBoard() {
@@ -203,8 +172,6 @@ public class KnightsTravailsCodeBehind {
                 this.squareButtons[newValue.row()][newValue.col()].setGraphic(this.targetIcon);
             }
         });
-        this.viewModel.wonProperty().addListener(_ -> this.determineGameState());
-        this.viewModel.lostProperty().addListener(_ -> this.determineGameState());
     }
 
     @FXML
